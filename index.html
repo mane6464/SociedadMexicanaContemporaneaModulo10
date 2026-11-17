@@ -1,0 +1,565 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#172b3a">
+  <title>MEVAPREPA | Sociedad Mexicana Contemporánea</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #172b3a;
+      --muted: #647481;
+      --paper: #f5f7f6;
+      --card: #fff;
+      --line: #e3e9e7;
+      --teal: #087e78;
+      --teal-dark: #076660;
+      --teal-light: #e4f3f0;
+      --gold: #f0bf68;
+      --green: #18764b;
+      --green-bg: #e8f6ed;
+      --red: #bd3b3b;
+      --red-bg: #fff0ef;
+      --shadow: 0 12px 32px rgb(23 43 58 / 7%);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font: 16px/1.55 Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    button, input, select { font: inherit; }
+    button { cursor: pointer; }
+    .shell { min-height: 100vh; }
+    .topbar {
+      position: sticky;
+      z-index: 5;
+      top: 0;
+      color: white;
+      background: #172b3a;
+      border-bottom: 1px solid rgb(255 255 255 / 9%);
+    }
+    .topbar-inner {
+      width: min(1160px, calc(100% - 40px));
+      min-height: 76px;
+      margin: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+    .brand { display: flex; align-items: center; gap: 12px; min-width: max-content; }
+    .brand-mark {
+      width: 40px; height: 40px; display: grid; place-items: center;
+      border-radius: 13px; color: var(--ink); background: var(--gold); font-weight: 850;
+    }
+    .brand-name { font-size: 15px; line-height: 1.2; font-weight: 750; letter-spacing: .02em; }
+    .brand-caption { margin-top: 4px; color: #b7c5ca; font-size: 11px; }
+    .nav { display: flex; align-items: center; gap: 5px; }
+    .nav button {
+      padding: 10px 13px; border: 0; border-radius: 9px; color: #c5d0d4; background: transparent;
+      font-size: 13px; font-weight: 650; transition: .18s ease;
+    }
+    .nav button:hover, .nav button[aria-current="page"] { color: white; background: rgb(255 255 255 / 11%); }
+    .nav .nav-exam { color: #183044; background: var(--gold); }
+    .nav .nav-exam:hover, .nav .nav-exam[aria-current="page"] { color: #183044; background: #f6cd85; }
+    main { width: min(1060px, calc(100% - 40px)); margin: 0 auto; padding: 36px 0 72px; }
+    .hero {
+      position: relative; overflow: hidden; min-height: 280px; display: flex; align-items: center;
+      padding: clamp(28px, 6vw, 58px); border-radius: 24px; color: white;
+      background: radial-gradient(ellipse at 86% 16%, rgb(91 166 149 / 43%), transparent 32%),
+        linear-gradient(118deg, #173142 2%, #1d4953 58%, #28766f);
+      box-shadow: var(--shadow);
+    }
+    .hero::after {
+      content: ""; position: absolute; width: 260px; height: 260px; right: 3%; bottom: -180px;
+      border: 1px solid rgb(255 255 255 / 17%); border-radius: 50%;
+      box-shadow: 0 0 0 28px rgb(255 255 255 / 4%), 0 0 0 58px rgb(255 255 255 / 3%);
+    }
+    .hero-content { position: relative; z-index: 1; max-width: 650px; }
+    .eyebrow { color: #a9ddd1; font-size: 11px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; }
+    h1 { margin: 12px 0 10px; font-size: clamp(32px, 5vw, 52px); line-height: 1.06; letter-spacing: -.045em; }
+    .hero p { max-width: 530px; margin: 0; color: #d3e2e3; font-size: 15px; }
+    .hero-actions { display: flex; gap: 11px; flex-wrap: wrap; margin-top: 25px; }
+    .button {
+      display: inline-flex; align-items: center; justify-content: center; gap: 9px; min-height: 44px;
+      padding: 10px 17px; border: 1px solid transparent; border-radius: 10px;
+      font-weight: 750; font-size: 13px; transition: transform .16s ease, background .16s ease;
+    }
+    .button:hover { transform: translateY(-1px); }
+    .button-primary { color: #183044; background: var(--gold); }
+    .button-primary:hover { background: #f6cd85; }
+    .button-secondary { color: white; background: rgb(255 255 255 / 10%); border-color: rgb(255 255 255 / 20%); }
+    .button-light { color: var(--ink); background: white; border-color: var(--line); }
+    .button-light:hover { background: #f6faf8; }
+    .button-teal { color: white; background: var(--teal); }
+    .button-teal:hover { background: var(--teal-dark); }
+    .section-heading { display: flex; align-items: end; justify-content: space-between; gap: 18px; margin: 38px 0 17px; }
+    .section-heading h2 { margin: 0; font-size: 21px; letter-spacing: -.025em; }
+    .section-heading p { margin: 4px 0 0; color: var(--muted); font-size: 13px; }
+    .feature-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    .feature-card, .panel, .study-card, .question-card, .quiz-card, .result-card, .empty-state {
+      border: 1px solid var(--line); border-radius: 16px; background: var(--card); box-shadow: var(--shadow);
+    }
+    .feature-card {
+      display: flex; align-items: flex-start; gap: 16px; padding: 21px; color: inherit;
+      text-align: left; text-decoration: none; transition: border-color .16s ease, transform .16s ease, box-shadow .16s ease;
+    }
+    .feature-card:hover { transform: translateY(-2px); border-color: #9dc9c1; box-shadow: 0 15px 34px rgb(23 43 58 / 10%); }
+    .feature-card:focus-visible { outline: 3px solid #69aaa2; outline-offset: 3px; }
+    .feature-icon {
+      width: 42px; height: 42px; flex: 0 0 42px; display: grid; place-items: center; border-radius: 13px;
+      color: var(--teal); background: var(--teal-light); font-size: 20px;
+    }
+    .feature-card h3 { margin: 1px 0 5px; font-size: 15px; }
+    .feature-card p { margin: 0; color: var(--muted); font-size: 13px; }
+    .source-note { margin: 20px 2px 0; color: var(--muted); font-size: 12px; }
+    .toolbar {
+      display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 21px 0 18px;
+    }
+    .search-wrap { position: relative; flex: 1 1 240px; }
+    .search-wrap span { position: absolute; top: 50%; left: 13px; transform: translateY(-50%); color: #71818a; }
+    .search, .filter {
+      width: 100%; min-height: 43px; padding: 9px 13px; border: 1px solid #dce5e2; border-radius: 10px;
+      outline: none; background: white; color: var(--ink);
+    }
+    .search { padding-left: 38px; }
+    .search:focus, .filter:focus { border-color: #69aaa2; box-shadow: 0 0 0 3px rgb(8 126 120 / 12%); }
+    .filter { width: auto; min-width: 180px; }
+    .count-label { color: var(--muted); font-size: 12px; white-space: nowrap; }
+    .unit-block { margin-top: 26px; }
+    .unit-title { display: flex; align-items: center; gap: 10px; margin: 0 0 14px; font-size: 18px; }
+    .unit-title::before { content: ""; width: 4px; height: 22px; border-radius: 8px; background: var(--teal); }
+    .topic-block { margin: 16px 0 12px; color: #52706e; font-size: 12px; font-weight: 800; letter-spacing: .09em; text-transform: uppercase; }
+    .study-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .study-card { padding: 17px 18px; box-shadow: 0 4px 15px rgb(23 43 58 / 4%); }
+    .study-card-top { display: flex; align-items: flex-start; gap: 11px; }
+    .number {
+      flex: 0 0 27px; width: 27px; height: 27px; display: grid; place-items: center; border-radius: 9px;
+      color: var(--teal-dark); background: var(--teal-light); font-size: 11px; font-weight: 800;
+    }
+    .study-card h4 { margin: 2px 0 5px; font-size: 14px; line-height: 1.4; }
+    .study-card p { margin: 0; color: #51616b; font-size: 13px; }
+    .question-list { display: grid; gap: 11px; }
+    .question-card { padding: 17px 19px; box-shadow: 0 4px 15px rgb(23 43 58 / 4%); }
+    .question-top { display: flex; align-items: flex-start; gap: 12px; }
+    .question-card h3 { margin: 2px 0 0; font-size: 14px; line-height: 1.55; }
+    .answer {
+      display: none; margin: 14px 0 0 39px; padding: 12px 14px; border-radius: 10px;
+      color: #34554a; background: #edf7f0; font-size: 13px;
+    }
+    .answer.is-open { display: block; animation: appear .2s ease-out; }
+    .answer strong { color: var(--green); }
+    .toggle-answer {
+      margin: 13px 0 0 39px; padding: 0; border: 0; color: var(--teal-dark);
+      background: none; font-size: 12px; font-weight: 800;
+    }
+    .toggle-answer:hover { text-decoration: underline; }
+    .empty-state { padding: 36px 20px; color: var(--muted); text-align: center; box-shadow: none; }
+    .quiz-heading {
+      display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; margin-bottom: 18px;
+    }
+    .quiz-heading h1 { margin: 0; font-size: clamp(26px, 4vw, 36px); letter-spacing: -.04em; }
+    .quiz-heading p { margin: 7px 0 0; color: var(--muted); font-size: 13px; }
+    .quiz-meta { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+    .pill { padding: 6px 10px; border: 1px solid var(--line); border-radius: 999px; background: white; color: #53636b; font-size: 11px; font-weight: 750; }
+    .progress-track { height: 7px; overflow: hidden; margin: 0 0 18px; border-radius: 99px; background: #e2e9e7; }
+    .progress-value { height: 100%; border-radius: inherit; background: linear-gradient(90deg, #087e78, #42aa91); transition: width .25s ease; }
+    .quiz-card { padding: clamp(20px, 4vw, 32px); }
+    .question-kicker { color: var(--teal); font-size: 11px; font-weight: 850; letter-spacing: .1em; text-transform: uppercase; }
+    .quiz-prompt { margin: 11px 0 22px; font-size: clamp(18px, 3vw, 23px); line-height: 1.4; letter-spacing: -.025em; }
+    .options { display: grid; gap: 10px; }
+    .option {
+      width: 100%; display: flex; align-items: flex-start; gap: 12px; padding: 12px 14px; border: 1px solid #dfe7e4;
+      border-radius: 11px; color: var(--ink); background: white; text-align: left; font-size: 13px; line-height: 1.45;
+      transition: border-color .15s, background .15s;
+    }
+    .option:hover:not(:disabled) { border-color: #73aaa3; background: #f7fbfa; }
+    .option:disabled { cursor: default; }
+    .option-letter {
+      flex: 0 0 25px; width: 25px; height: 25px; display: grid; place-items: center; border: 1px solid #dfe7e4;
+      border-radius: 7px; color: #62727a; background: #f7f9f8; font-size: 11px; font-weight: 850;
+    }
+    .option.correct { border-color: #8bc7a2; color: #145e3d; background: var(--green-bg); }
+    .option.correct .option-letter { border-color: #8bc7a2; color: var(--green); background: #d7efdf; }
+    .option.incorrect { border-color: #e3a09b; color: #922f2f; background: var(--red-bg); }
+    .option.incorrect .option-letter { border-color: #e3a09b; color: var(--red); background: #ffe4e1; }
+    .option-mark { margin-left: auto; font-size: 17px; font-weight: 900; }
+    .feedback { min-height: 0; margin-top: 13px; font-size: 13px; font-weight: 700; }
+    .feedback:empty { display: none; }
+    .feedback.good { color: var(--green); }
+    .feedback.bad { color: var(--red); }
+    .quiz-controls { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 20px; }
+    .control-group { display: flex; gap: 8px; }
+    .quiz-controls .button { min-height: 39px; padding: 8px 13px; font-size: 12px; }
+    .button:disabled { cursor: not-allowed; opacity: .48; transform: none; }
+    .result-card { max-width: 620px; margin: 30px auto; padding: clamp(28px, 6vw, 48px); text-align: center; }
+    .result-icon {
+      width: 64px; height: 64px; display: grid; place-items: center; margin: 0 auto 17px;
+      border-radius: 21px; color: var(--teal-dark); background: var(--teal-light); font-size: 28px;
+    }
+    .result-card h2 { margin: 0; font-size: 26px; letter-spacing: -.03em; }
+    .result-score { margin: 16px 0 2px; color: var(--teal-dark); font-size: clamp(48px, 9vw, 70px); line-height: 1.1; font-weight: 850; letter-spacing: -.06em; }
+    .result-grade { color: var(--muted); font-size: 14px; }
+    .grade-value { color: var(--ink); font-weight: 850; }
+    .result-note { margin: 18px auto 23px; max-width: 390px; color: var(--muted); font-size: 13px; }
+    .result-card .button { margin: 4px; }
+    .notice { padding: 14px 16px; border: 1px solid #f1d59f; border-radius: 11px; color: #795822; background: #fff8e9; font-size: 13px; }
+    .footer { margin-top: 40px; color: #839098; text-align: center; font-size: 11px; }
+    .hidden { display: none !important; }
+    @keyframes appear { from { opacity: 0; transform: translateY(3px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 720px) {
+      .topbar-inner { width: calc(100% - 24px); min-height: 66px; gap: 8px; }
+      .brand-caption { display: none; }
+      .brand { gap: 8px; }
+      .brand-mark { width: 35px; height: 35px; }
+      .brand-name { max-width: 130px; font-size: 12px; }
+      .nav { gap: 2px; }
+      .nav button { padding: 9px 8px; font-size: 11px; }
+      main { width: calc(100% - 26px); padding-top: 23px; }
+      .hero { min-height: 280px; border-radius: 18px; }
+      .feature-grid, .study-grid { grid-template-columns: 1fr; }
+      .quiz-heading { display: block; }
+      .quiz-meta { justify-content: flex-start; margin-top: 12px; }
+    }
+    @media (max-width: 440px) {
+      .brand-name { width: 75px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .nav button { padding: 8px 6px; font-size: 10px; }
+      .hero-actions .button { flex: 1 1 auto; }
+      .filter { min-width: 100%; }
+      .quiz-controls { align-items: stretch; flex-wrap: wrap; }
+      .quiz-controls .control-group { flex: 1; }
+      .quiz-controls .control-group .button { flex: 1; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <div class="topbar-inner">
+        <div class="brand" aria-label="MEVAPREPA">
+          <div class="brand-mark" aria-hidden="true">M</div>
+          <div><div class="brand-name">MEVAPREPA</div><div class="brand-caption">Tu espacio de estudio</div></div>
+        </div>
+        <nav class="nav" aria-label="Navegación principal">
+          <button type="button" data-view="home" aria-current="page">Inicio</button>
+          <button type="button" data-view="concepts">Conceptos</button>
+          <button type="button" data-view="questions">Cuestionario</button>
+          <button type="button" class="nav-exam" data-view="exam">Examen diagnóstico</button>
+        </nav>
+      </div>
+    </header>
+    <main>
+      <section id="home-view" class="view">
+        <div class="hero">
+          <div class="hero-content">
+            <div class="eyebrow">Módulo 10 · Guía de estudio</div>
+            <h1>Sociedad Mexicana<br>Contemporánea</h1>
+            <p>Repasa las ideas clave, comprueba lo que sabes y avanza a tu ritmo.</p>
+            <div class="hero-actions">
+              <button type="button" class="button button-primary" data-view="exam">Examen diagnóstico <span aria-hidden="true">→</span></button>
+              <button type="button" class="button button-secondary" data-view="concepts">Explorar conceptos</button>
+            </div>
+          </div>
+        </div>
+        <div class="section-heading">
+          <div><h2>¿Cómo quieres estudiar?</h2><p>Elige una forma de comenzar tu repaso.</p></div>
+        </div>
+        <div class="feature-grid">
+          <a class="feature-card" href="#concepts" data-view="concepts">
+            <div class="feature-icon" aria-hidden="true">✦</div>
+            <div><h3>Conceptos clave</h3><p>Definiciones ordenadas por unidad y subtema, con búsqueda para encontrar cada idea.</p></div>
+          </a>
+          <a class="feature-card" href="#questions" data-view="questions">
+            <div class="feature-icon" aria-hidden="true">▤</div>
+            <div><h3>Preguntas para repasar</h3><p>Lee una pregunta y revela su explicación solo cuando estés listo.</p></div>
+          </a>
+        </div>
+        <p class="source-note" id="home-summary"></p>
+      </section>
+
+      <section id="concepts-view" class="view hidden">
+        <div class="section-heading">
+          <div><h2>Estudio de conceptos</h2><p>Explora las definiciones por unidad o busca un término.</p></div>
+          <span class="count-label" id="concept-count"></span>
+        </div>
+        <div class="toolbar">
+          <label class="search-wrap"><span aria-hidden="true">⌕</span><input id="concept-search" class="search" type="search" placeholder="Buscar concepto o definición..." autocomplete="off" aria-label="Buscar conceptos"></label>
+          <select id="concept-unit" class="filter" aria-label="Filtrar por unidad"><option value="">Todas las unidades</option></select>
+        </div>
+        <div id="concept-list" aria-live="polite"></div>
+      </section>
+
+      <section id="questions-view" class="view hidden">
+        <div class="section-heading">
+          <div><h2>Cuestionario de repaso</h2><p>Intenta responder antes de mostrar la explicación.</p></div>
+          <span class="count-label" id="question-count"></span>
+        </div>
+        <div class="toolbar">
+          <label class="search-wrap"><span aria-hidden="true">⌕</span><input id="question-search" class="search" type="search" placeholder="Buscar en las preguntas..." autocomplete="off" aria-label="Buscar preguntas"></label>
+          <select id="question-unit" class="filter" aria-label="Filtrar por unidad"><option value="">Todas las unidades</option></select>
+        </div>
+        <div id="question-list" aria-live="polite"></div>
+      </section>
+
+      <section id="exam-view" class="view hidden">
+        <div id="exam-content"></div>
+      </section>
+      <footer class="footer">Material de apoyo para el estudio · MEVAPREPA</footer>
+    </main>
+  </div>
+
+  <script type="application/json" id="concepts-data">"\u003cstyle\u003e\r\n@page {\r\n  size: A4;\r\n  margin: 1cm;\r\n  @bottom-right {\r\n    content: \"Página \" counter(page) \" de \" counter(pages);\r\n    font-size: 9pt;\r\n  }\r\n}\r\n\r\nhtml, body {\r\n  font-family: Arial, sans-serif;\r\n  font-size: 11pt;\r\n  line-height: 1.15;\r\n  margin: 0;\r\n}\r\n\r\nbody {\r\n  padding: 0;\r\n}\r\n\r\nh1, h2, h3 {\r\n  margin: 0 0 4px 0;\r\n}\r\n\r\np, ul, ol, li {\r\n  margin: 0 0 3px 0;\r\n}\r\n\r\nol, ul {\r\n  padding-left: 1.4em;\r\n}\r\n\u003c/style\u003e\r\n\r\n# Conceptos clave del Módulo 10 Sociedad Mexicana Contemporánea \r\n\r\nSelección estimada a partir de los propósitos, resultados de aprendizaje, saberes indicados y evaluación final del material fuente. Los conceptos se limitan a lo respaldado por la guía.\r\n\r\n## Unidad 1. Sociedad\r\n\r\n### Identidad, cultura y diversidad\r\n\r\n1. **Identidad:** Rasgos y significados que permiten distinguir a una persona o colectividad y que se construyen también mediante sus relaciones y experiencias.\r\n2. **Identidad colectiva:** Sentido de pertenencia que se comparte con otras personas por elementos como historia, cultura, lengua o prácticas comunes.\r\n3. **Cultura:** Prácticas, ideas, valores, expresiones artísticas y significados que se aprenden y comparten dentro de una colectividad.\r\n4. **Etnicidad:** Identificación o sentido de pertenencia a un grupo étnico o cultural.\r\n5. **Grupo étnico:** Colectividad que comparte elementos culturales e históricos, como lengua, costumbres y formas de organización.\r\n6. **Diversidad social y cultural:** Coexistencia de distintas identidades, lenguas, religiones, estructuras familiares, costumbres y condiciones de vida.\r\n7. **Práctica sociocultural:** Forma de actuar o expresarse que adquiere sentido dentro de un contexto social, histórico y geográfico particular.\r\n8. **Cosmovisión:** Manera en que una persona o colectividad interpreta el mundo, la vida y sus relaciones; ayuda a comprender el significado de sus prácticas culturales.\r\n9. **Interculturalidad:** Relación y convivencia entre grupos culturales distintos, basada en el diálogo y el respeto, no en la eliminación de sus diferencias.\r\n10. **Identidad mexicana:** Conjunto plural y cambiante de pertenencias y experiencias que caracterizan a las personas y colectividades de México; no es idéntico para toda la población.\r\n\r\n### Población e indicadores sociodemográficos\r\n\r\n11. **Demografía:** Estudio de la composición, distribución y cambios de una población.\r\n12. **Estructura de la población:** Composición de la población, por ejemplo, según edad y sexo.\r\n13. **Dinámica poblacional:** Cambios en el tamaño y composición de la población a lo largo del tiempo, relacionados con nacimientos, defunciones y migración.\r\n14. **Indicador sociodemográfico:** Dato que permite describir o comparar características de la población, como edad, sexo, escolaridad, fecundidad o migración.\r\n15. **Pirámide de población:** Gráfica de la distribución por edad y sexo; su forma permite observar cambios demográficos.\r\n16. **Razón de sexo:** Comparación entre la cantidad de hombres y mujeres de una población; puede variar entre regiones, entre otros motivos, por la migración.\r\n17. **Fecundidad:** Comportamiento relacionado con el número de hijos que tienen las personas o familias; puede asociarse a factores educativos, sociales, económicos y de acceso a servicios.\r\n18. **Migración:** Desplazamiento de personas entre lugares de origen y destino; modifica la composición de las poblaciones involucradas.\r\n19. **Envejecimiento poblacional:** Aumento gradual de la proporción de personas de mayor edad en una población; se relaciona, entre otros cambios, con la reducción de la fecundidad.\r\n20. **Estructura familiar:** Composición y organización de las familias y hogares, que varía en el tiempo y entre regiones.\r\n\r\n### Familia, género y religión\r\n\r\n21. **Familia nuclear:** Arreglo familiar integrado comúnmente por padres e hijos.\r\n22. **Familia extendida:** Arreglo familiar que incluye, además del núcleo de padres e hijos, a otros parientes.\r\n23. **Roles de género:** Expectativas y responsabilidades que una sociedad asocia al género; son construcciones sociales que pueden transformarse.\r\n24. **Diversidad religiosa:** Coexistencia de distintas creencias, afiliaciones y prácticas religiosas, así como de personas sin religión.\r\n25. **Secularización:** Proceso por el que la religión pierde influencia en ciertos ámbitos públicos o políticos, sin que necesariamente desaparezca de la vida individual.\r\n\r\n## Unidad 2. Estructura económica\r\n\r\n### Producción e indicadores\r\n\r\n26. **Estructura económica:** Organización de las actividades productivas y de las relaciones que intervienen en la producción y distribución de bienes y servicios.\r\n27. **Modelo de desarrollo:** Conjunto de objetivos y políticas mediante los que un gobierno orienta la economía para alcanzar una idea de desarrollo.\r\n28. **Sector económico:** Conjunto de actividades productivas relacionadas que permite clasificar la producción de una economía.\r\n29. **Sector primario:** Actividades que obtienen recursos directamente de la naturaleza, como agricultura, ganadería, pesca y minería.\r\n30. **Sector secundario:** Actividades que transforman materias primas o fabrican productos, como las industrias manufactureras y la construcción.\r\n31. **Sector terciario:** Actividades que ofrecen servicios, como comercio, transporte, educación, salud y turismo.\r\n32. **Producto Interno Bruto (PIB):** Valor de los bienes y servicios finales producidos en un país durante un periodo determinado; se usa como indicador del tamaño y crecimiento de la economía.\r\n33. **PIB nominal:** PIB calculado con los precios vigentes en el periodo medido; puede aumentar por cambios en los precios además de por cambios en la producción.\r\n34. **PIB real:** PIB expresado de manera que se descuenta el efecto de los cambios de precios, para comparar mejor la producción entre periodos.\r\n35. **Tasa de crecimiento:** Variación porcentual de una variable entre un valor inicial y uno final: (valor final − valor inicial) ÷ valor inicial × 100.\r\n36. **PIB per cápita:** PIB dividido entre la población; es un promedio por habitante y no muestra cómo se distribuye el ingreso.\r\n37. **Inflación:** Aumento general de los precios; afecta el poder de compra y debe considerarse al comparar valores monetarios de distintos periodos.\r\n38. **Desempleo:** Situación de las personas que buscan trabajo y no lo encuentran; es uno de los indicadores que ayudan a analizar la economía.\r\n39. **Crecimiento económico:** Aumento de la producción de bienes y servicios de una economía durante un periodo.\r\n40. **Desarrollo:** Proceso multidimensional que, además de la producción, considera libertades, oportunidades y condiciones de vida; el material señala que el concepto se ha construido y discutido históricamente.\r\n\r\n### Modelos económicos, comercio y trabajo\r\n\r\n41. **Industrialización por Sustitución de Importaciones (ISI):** Modelo impulsado en México aproximadamente entre 1940 y 1985, que buscaba producir internamente bienes que antes se importaban.\r\n42. **Industrialización acelerada:** Expansión rápida de la actividad industrial, asociada en la guía con cambios en la producción, el empleo y la organización social.\r\n43. **Modelo neoclásico o neoliberal:** Modelo estudiado para el periodo aproximado de 1985 en adelante, caracterizado en el material por la apertura comercial y las privatizaciones.\r\n44. **Liberalización comercial:** Reducción de barreras al intercambio de bienes y servicios entre países.\r\n45. **Privatización:** Transferencia al sector privado de una empresa o actividad que pertenecía al Estado.\r\n46. **Crisis económica de 1994:** Crisis mexicana asociada a una fuerte devaluación del peso y a problemas de estabilidad económica.\r\n47. **Tratado de Libre Comercio de América del Norte (TLCAN):** Acuerdo comercial entre México, Estados Unidos y Canadá, vigente desde 1994 según el periodo histórico estudiado en la guía.\r\n48. **Cuentas nacionales:** Registros que reúnen transacciones y datos económicos para ofrecer una perspectiva general del funcionamiento de la economía.\r\n49. **Empleo formal:** Trabajo regulado que suele contar con contrato y prestaciones conforme a la ley.\r\n50. **Empleo informal:** Trabajo que puede no estar plenamente registrado o protegido por las regulaciones laborales.\r\n\r\n## Unidad 3. Sistema político\r\n\r\n### Estado, Constitución y soberanía\r\n\r\n51. **Sistema político:** Conjunto de instituciones, normas y actores que organizan el ejercicio del poder y la vida pública.\r\n52. **Estado:** Organización jurídico-política con población y territorio, instituciones y normas para ordenar la vida colectiva.\r\n53. **Gobierno:** Conjunto de autoridades que dirige y administra el Estado durante un periodo.\r\n54. **Constitución:** Norma fundamental que establece la organización del Estado, las atribuciones de las autoridades y derechos de la población.\r\n55. **Constitución de 1917:** Constitución mexicana surgida de procesos históricos y demandas políticas, sociales y económicas de su época.\r\n56. **Garantías individuales:** Derechos y libertades reconocidos y protegidos por la Constitución en el lenguaje del material; su reconocimiento legal no garantiza por sí solo su cumplimiento efectivo.\r\n57. **Soberanía nacional:** Capacidad de la nación y su Estado para decidir sobre sus asuntos y relacionarse con otros Estados sin subordinación.\r\n58. **Soberanía popular:** Principio según el cual el poder público emana del pueblo.\r\n59. **Artículo 2 constitucional:** Disposición que reconoce la composición pluricultural de la nación y establece derechos de los pueblos indígenas.\r\n60. **Artículo 39 constitucional:** Disposición que establece que la soberanía nacional reside esencial y originariamente en el pueblo.\r\n61. **Reforma constitucional:** Modificación formal de la Constitución realizada mediante el procedimiento especial previsto para ello.\r\n62. **Estado monolítico:** Etapa histórica descrita en la guía, marcada por la hegemonía del partido oficial, el presidencialismo y la concentración efectiva del poder.\r\n63. **Presidencialismo:** Forma de organización en la que la figura presidencial concentra atribuciones e influencia política importantes; en el Estado monolítico analizado, su poder efectivo fue especialmente amplio.\r\n\r\n### Organización del gobierno y relaciones institucionales\r\n\r\n64. **Federalismo:** Organización política que distribuye atribuciones entre la Federación y las entidades federativas.\r\n65. **División de poderes:** Distribución de funciones públicas entre los poderes Ejecutivo, Legislativo y Judicial para evitar la concentración de autoridad.\r\n66. **Poder Ejecutivo:** Poder que administra el gobierno y ejecuta las leyes.\r\n67. **Poder Legislativo:** Poder que discute, crea, modifica y aprueba leyes.\r\n68. **Poder Judicial:** Poder que interpreta y aplica el derecho al resolver controversias.\r\n69. **Estado laico:** Estado que no tiene una religión oficial y mantiene separadas las instituciones estatales y religiosas.\r\n70. **Tratado de libre comercio:** Convenio entre países para facilitar el intercambio de bienes y servicios, generalmente reduciendo barreras comerciales.\r\n\r\n### Ciudadanía, partidos y sociedad civil\r\n\r\n71. **Partido político:** Organización que reúne y representa propuestas e intereses y busca participar en el poder público, entre otras vías mediante elecciones.\r\n72. **Representación política:** Mecanismo por el que la ciudadanía elige personas para participar en la toma de decisiones públicas en su nombre.\r\n73. **Sociedad civil:** Conjunto de grupos y organizaciones ciudadanas que intervienen en asuntos públicos desde fuera del gobierno.\r\n74. **Movimiento social:** Acción colectiva organizada para expresar demandas o buscar cambios sociales, políticos o culturales.\r\n75. **Medios de comunicación:** Canales que difunden información y pueden influir en la opinión pública y en las pautas de comportamiento social.\r\n"</script>
+  <script type="application/json" id="questions-data">"\u003cstyle\u003e\r\n@page {\r\n  size: A4;\r\n  margin: 1cm;\r\n  @bottom-right {\r\n    content: \"Página \" counter(page) \" de \" counter(pages);\r\n    font-size: 9pt;\r\n  }\r\n}\r\n\r\nhtml, body {\r\n  font-family: Arial, sans-serif;\r\n  font-size: 11pt;\r\n  line-height: 1.15;\r\n  margin: 0;\r\n}\r\n\r\nbody {\r\n  padding: 0;\r\n}\r\n\r\nh1, h2, h3 {\r\n  margin: 0 0 4px 0;\r\n}\r\n\r\np, ul, ol, li {\r\n  margin: 0 0 3px 0;\r\n}\r\n\r\nol, ul {\r\n  padding-left: 1.4em;\r\n}\r\n\u003c/style\u003e\r\n\r\n# Cuestionario del Módulo 10 Sociedad Mexicana Contemporánea\r\n\r\nSelección estimada con base en los propósitos, resultados de aprendizaje, saberes indicados y la evaluación final del material fuente. No predice las preguntas del examen oficial.\r\n\r\n## Unidad 1. Sociedad\r\n\r\n### Identidad, cultura y diversidad\r\n\r\n1. ¿Qué elementos pueden formar parte de la identidad de una persona? R_ Rasgos personales y sociales como la historia, el lugar de origen, la lengua, la familia, la ocupación, las creencias y las relaciones con otras personas.\r\n2. ¿Qué significa que la identidad también sea colectiva? R_ Que una persona puede compartir con otros grupos una historia, costumbres, lengua o valores que generan pertenencia, sin dejar de tener una identidad individual.\r\n3. ¿Cómo se construye la cultura de una sociedad? R_ Mediante prácticas, ideas, valores y significados que las personas aprenden, comparten y transforman al convivir.\r\n4. ¿Por qué las prácticas sociales deben analizarse en su contexto histórico y geográfico? R_ Porque su significado y sus formas dependen del tiempo, el lugar y las condiciones sociales en las que se desarrollan.\r\n5. ¿Qué se entiende por diversidad social y cultural? R_ La coexistencia de distintas identidades, lenguas, religiones, formas de familia, costumbres y condiciones de vida dentro de una sociedad.\r\n6. ¿Por qué México puede considerarse una sociedad diversa? R_ Porque presenta diferencias regionales, étnicas, lingüísticas, religiosas, familiares, económicas y de formas de vida.\r\n7. ¿Qué es un grupo étnico? R_ Una colectividad cuyos integrantes comparten elementos de identidad cultural, como una historia, lengua, costumbres o formas de organización.\r\n8. ¿Qué es la etnicidad? R_ El sentido de identificación o pertenencia de una persona a un grupo étnico o cultural.\r\n9. ¿Por qué conviene evitar juzgar una práctica cultural fuera de su contexto? R_ Porque hacerlo puede llevar a interpretarla con prejuicios o valores ajenos a la historia y cosmovisión de quienes la practican.\r\n10. ¿Qué actitud favorece la convivencia entre grupos culturales distintos? R_ El diálogo respetuoso, la disposición a comprender otros puntos de vista y la búsqueda de acuerdos sin negar las diferencias.\r\n\r\n### Población e indicadores sociodemográficos\r\n\r\n11. ¿Qué estudia la demografía? R_ La población, su tamaño, distribución, composición y los cambios que experimenta a lo largo del tiempo.\r\n12. ¿Qué información ofrece un indicador sociodemográfico? R_ Datos para describir y comparar a la población, por ejemplo, su edad, sexo, escolaridad, fecundidad, migración o características de los hogares.\r\n13. ¿Para qué sirve una pirámide de población? R_ Para representar la distribución de la población por grupos de edad y sexo y observar cambios demográficos.\r\n14. ¿Qué cambio general muestra la estructura por edad de México descrita en el libro? R_ La base de la pirámide se ha estrechado por la disminución de la fecundidad; México sigue siendo un país predominantemente joven, aunque su población envejece gradualmente.\r\n15. ¿Qué es la razón de sexo y qué puede hacerla variar entre regiones? R_ Es una comparación entre la cantidad de hombres y mujeres; la migración puede alterarla porque los movimientos de población no siempre incluyen por igual a ambos sexos.\r\n16. ¿Qué relación puede existir entre escolaridad y número de hijos? R_ La escolaridad puede influir en cuándo las personas deciden formar una familia y tener hijos, al ampliar información y opciones de vida; no determina por sí sola esas decisiones.\r\n17. ¿Qué otros factores pueden influir en las decisiones sobre procreación? R_ El acceso a información sobre sexualidad, los servicios de salud y anticoncepción, las condiciones económicas y la aceptación social de distintas decisiones personales.\r\n18. ¿Cómo influye la migración en la composición de una población? R_ Al cambiar el lugar de residencia, las personas modifican el tamaño y las características de las poblaciones de origen y destino, incluidas su distribución por sexo y edad.\r\n\r\n### Familias, género y religión\r\n\r\n19. ¿Qué transformaciones familiares destaca el material? R_ La disminución de la fecundidad y del tamaño promedio de los hogares, así como una mayor variedad de arreglos familiares y uniones de pareja.\r\n20. ¿Cuál es la diferencia entre una familia nuclear y una extendida? R_ La nuclear suele estar formada por padres e hijos; la extendida incorpora también a otros parientes, como abuelos, tíos o primos.\r\n21. ¿Qué son los roles de género dentro de la familia? R_ Son expectativas y responsabilidades que una sociedad asigna a las personas según su género; pueden cambiar y no tienen que limitar las capacidades de cada integrante.\r\n22. ¿Qué tendencia religiosa describe el material para México? R_ La población continúa siendo mayoritariamente católica, pero ha aumentado la proporción de personas afiliadas a otras religiones y de personas sin religión.\r\n23. ¿Qué significa secularización? R_ Es un proceso por el cual la religión pierde influencia en ciertos ámbitos de la vida pública o política; no implica necesariamente que desaparezca la religión de la vida personal.\r\n24. ¿Cómo puede influir la diversidad religiosa en una sociedad? R_ En sus valores, costumbres, prácticas comunitarias y formas de entender el mundo; reconocerla ayuda a evitar prejuicios y facilita la convivencia.\r\n25. ¿Qué aportan las manifestaciones artísticas al estudio de la sociedad mexicana? R_ Expresan experiencias e ideas de una época y un lugar, y ayudan a reconocer la diversidad cultural y las formas en que se construye la identidad colectiva.\r\n\r\n## Unidad 2. Estructura económica\r\n\r\n### Estructura, producción e indicadores\r\n\r\n26. ¿Qué es la estructura económica? R_ La organización de las actividades productivas y de las relaciones mediante las que se producen y distribuyen bienes y servicios.\r\n27. ¿Qué es un modelo de desarrollo? R_ Un conjunto de objetivos y políticas con los que un gobierno busca orientar la economía y promover determinado tipo de desarrollo.\r\n28. ¿Cuáles son los tres sectores económicos principales? R_ El primario, que obtiene recursos de la naturaleza; el secundario, que los transforma o fabrica productos; y el terciario, que ofrece servicios.\r\n29. ¿A qué sector pertenecen la agricultura, la manufactura y el turismo, respectivamente? R_ La agricultura al primario, la manufactura al secundario y el turismo al terciario.\r\n30. ¿Qué mide el Producto Interno Bruto (PIB)? R_ El valor de los bienes y servicios finales producidos en un país durante un periodo determinado; permite observar el tamaño y el crecimiento de la economía.\r\n31. ¿Cuál es la diferencia entre PIB nominal y PIB real? R_ El nominal usa los precios del periodo medido y puede reflejar inflación; el real descuenta el efecto de los cambios de precios para comparar la producción.\r\n32. ¿Cómo se calcula la tasa porcentual de crecimiento de una variable? R_ Se resta el valor inicial del final, se divide el resultado entre el valor inicial y se multiplica por 100.\r\n33. ¿Qué indica el PIB per cápita? R_ El PIB dividido entre la población; expresa un promedio por habitante, pero no muestra cómo se distribuye el ingreso entre las personas.\r\n34. ¿En qué se diferencian crecimiento económico y desarrollo? R_ El crecimiento se refiere al aumento de la producción; el desarrollo también considera cambios cualitativos, como oportunidades, bienestar y condiciones de vida.\r\n35. ¿Qué indicadores ayudan a analizar el funcionamiento de una economía? R_ Entre otros, el PIB, la inflación, la tasa de interés, el desempleo y el tipo de cambio; conviene analizarlos en conjunto y en su contexto.\r\n\r\n### Modelos económicos en México\r\n\r\n36. ¿Qué buscó la Industrialización por Sustitución de Importaciones (ISI)? R_ Producir en México bienes que antes se importaban, con el propósito de fortalecer la industria nacional.\r\n37. ¿En qué periodo ubica el libro el modelo de ISI? R_ Aproximadamente entre 1940 y 1985, periodo en que se impulsó la industrialización y cambió la estructura económica del país.\r\n38. ¿Qué transformaciones se relacionan con la industrialización acelerada? R_ El crecimiento de la producción industrial y de las ciudades, junto con cambios en el empleo y en la organización social; sus beneficios y costos no se distribuyeron por igual.\r\n39. ¿Qué caracteriza al modelo neoclásico o neoliberal estudiado en la guía? R_ La apertura comercial, las privatizaciones y una menor intervención directa del Estado en ciertas actividades económicas.\r\n40. ¿Qué es la liberalización comercial? R_ La reducción de obstáculos al comercio entre países, por ejemplo, mediante la disminución de aranceles a las importaciones y exportaciones.\r\n41. ¿Qué es una privatización? R_ La transferencia de una empresa o actividad que pertenecía al Estado al sector privado.\r\n42. ¿Cómo se diferencian, en términos generales, la ISI y el modelo neoliberal? R_ La ISI buscaba fortalecer la producción nacional que sustituía importaciones; el modelo neoliberal promovió mayor apertura comercial y privatizaciones.\r\n43. ¿Qué fue la crisis económica de 1994 en México? R_ Una crisis que incluyó una fuerte devaluación del peso y afectó la estabilidad económica; sus consecuencias se reflejaron en la actividad y las condiciones de vida.\r\n44. ¿Qué es el Tratado de Libre Comercio de América del Norte (TLCAN) en el contexto del libro? R_ Un acuerdo comercial entre México, Estados Unidos y Canadá que entró en vigor en 1994 para facilitar el intercambio de bienes y servicios.\r\n45. ¿Por qué el análisis del TLCAN incluye el tema de soberanía? R_ Porque los acuerdos entre Estados pueden influir en las decisiones económicas nacionales y suscitar debates sobre los alcances de la cooperación y la autonomía.\r\n\r\n### Trabajo y análisis económico\r\n\r\n46. ¿Qué diferencia hay entre empleo formal e informal? R_ El formal está regulado y suele incluir contrato y prestaciones; el informal puede carecer de esas protecciones o no estar plenamente registrado.\r\n47. ¿Qué significa analizar las pautas de comportamiento laboral? R_ Examinar cómo se organizan el trabajo y las relaciones laborales y qué valores, condiciones económicas y cambios sociales influyen en ellos.\r\n48. ¿Por qué un aumento del PIB no demuestra por sí solo que mejoró la vida de toda la población? R_ Porque el PIB registra producción total, pero no indica cómo se distribuye el ingreso ni si todas las personas tienen acceso a oportunidades y servicios.\r\n49. ¿Cómo se puede comparar la importancia de los sectores económicos? R_ Revisando cuánto aporta cada sector al PIB en un periodo y lugar determinados, sin confundir su participación con el número de empleos que genera.\r\n50. ¿Qué pasos ayudan a interpretar una gráfica económica? R_ Identificar título, periodo, unidades y fuente; observar tendencias y cambios; y relacionarlos con el contexto antes de sacar conclusiones.\r\n\r\n## Unidad 3. Sistema político\r\n\r\n### Estado, Constitución y soberanía\r\n\r\n51. ¿Qué es el sistema político? R_ El conjunto de instituciones, normas y actores que organizan y ejercen el poder y regulan la vida pública.\r\n52. ¿Qué es el Estado? R_ Una organización jurídico-política con población y territorio, que establece normas e instituciones para organizar la vida colectiva.\r\n53. ¿En qué se diferencian el Estado y el Gobierno? R_ El Estado es la organización política permanente; el Gobierno es el conjunto de autoridades que lo dirige y administra durante un periodo.\r\n54. ¿Qué es la Constitución Política de los Estados Unidos Mexicanos? R_ La norma fundamental que establece la organización del Estado, las atribuciones de sus autoridades y derechos de la población.\r\n55. ¿Por qué es importante ubicar la Constitución de 1917 en su contexto histórico? R_ Porque surgió de procesos y demandas políticas, sociales y económicas de su época, y ese contexto ayuda a comprender sus principios y artículos.\r\n56. ¿Qué tema central reconoce el artículo 2 constitucional que estudia el libro? R_ La composición pluricultural de la nación y derechos de los pueblos indígenas, incluidos aspectos de su organización y cultura.\r\n57. ¿Qué principio expresa el artículo 39 constitucional? R_ Que la soberanía nacional reside esencial y originariamente en el pueblo, del que emana el poder público.\r\n58. ¿Qué son las garantías individuales en el lenguaje del material? R_ Derechos y libertades que la Constitución reconoce y protege para las personas; deben distinguirse entre lo que dispone la norma y su cumplimiento efectivo.\r\n59. ¿Qué significa soberanía nacional? R_ La capacidad de la nación y su Estado para decidir sobre sus asuntos sin quedar subordinados a otro Estado, dentro del marco de sus compromisos y relaciones internacionales.\r\n60. ¿Qué fue el Estado monolítico descrito en la unidad? R_ Una etapa del sistema político mexicano caracterizada por la hegemonía del partido oficial, el presidencialismo y una concentración efectiva del poder, pese a la división formal de poderes.\r\n\r\n### Gobierno y organización del poder\r\n\r\n61. ¿Qué es el federalismo? R_ Una forma de organización en la que el poder y las atribuciones se distribuyen entre la Federación y las entidades federativas.\r\n62. ¿Para qué sirve la división de poderes? R_ Para distribuir funciones entre Ejecutivo, Legislativo y Judicial y establecer controles que eviten concentrar toda la autoridad en una sola instancia.\r\n63. ¿Cuál es la función principal del Poder Ejecutivo? R_ Administrar el gobierno y ejecutar las leyes conforme a la Constitución y al marco legal.\r\n64. ¿Cuál es la función principal del Poder Legislativo? R_ Discutir, crear, modificar y aprobar leyes, además de ejercer las atribuciones de control que le corresponden.\r\n65. ¿Cuál es la función principal del Poder Judicial? R_ Interpretar y aplicar el derecho al resolver controversias; los tribunales pertenecen a este poder.\r\n66. ¿Qué es una reforma constitucional? R_ Un cambio formal a la Constitución que debe seguir el procedimiento especial establecido para modificarla.\r\n67. ¿Qué es el Estado laico? R_ Un Estado que no adopta una religión oficial y mantiene diferenciadas las instituciones estatales y religiosas.\r\n68. ¿Cómo debe analizarse la relación entre el Estado y las iglesias? R_ Considerando su marco legal, la autonomía de ambas instituciones y la libertad de creencias, sin confundir autoridad religiosa con autoridad pública.\r\n\r\n### Partidos, ciudadanía y sociedad civil\r\n\r\n69. ¿Qué son los partidos políticos? R_ Organizaciones que articulan ideas e intereses, presentan proyectos y buscan participar en el poder público, entre otras vías mediante elecciones.\r\n70. ¿Qué es la representación política? R_ El mecanismo por el cual la ciudadanía elige representantes para que participen y tomen decisiones en instituciones de gobierno.\r\n71. ¿Qué es la sociedad civil? R_ El conjunto diverso de organizaciones y grupos ciudadanos que participan en asuntos públicos sin formar parte del gobierno.\r\n72. ¿Qué muestra el movimiento estudiantil de 1968 en el estudio del sistema político? R_ La capacidad de movilización social y las demandas de participación y cambios políticos, así como la respuesta del Estado ante ellas.\r\n73. ¿Qué diferencia hay entre una asociación civil y una autoridad gubernamental? R_ La asociación reúne personas para fines comunes y participa desde la sociedad; la autoridad ejerce atribuciones públicas definidas por la ley.\r\n74. ¿Qué papel pueden desempeñar los medios de comunicación? R_ Informar sobre asuntos públicos e influir en la opinión y en las pautas de comportamiento; por ello es importante analizar críticamente sus contenidos.\r\n75. ¿Por qué los conflictos sobre derechos indígenas pueden involucrar a la sociedad civil y al Poder Judicial? R_ La sociedad civil puede visibilizar y apoyar demandas colectivas, mientras que los tribunales resuelven controversias jurídicas conforme a la Constitución y las leyes.\r\n"</script>
+  <script>
+    "use strict";
+    const conceptSource = JSON.parse(document.getElementById("concepts-data").textContent);
+    const questionSource = JSON.parse(document.getElementById("questions-data").textContent);
+    const state = {
+      concepts: [], questions: [], units: [], view: "home", exam: null, examQuestionIndex: 0, examSubmitted: false
+    };
+    const $ = (selector, root = document) => root.querySelector(selector);
+    const $$ = (selector, root = document) => Array.from(root.querySelectorAll(selector));
+
+    function parseMaterials(source, kind) {
+      let unit = "";
+      let topic = "";
+      const entries = [];
+      for (const rawLine of source.split(/\r?\n/)) {
+        const line = rawLine.trim();
+        if (line.startsWith("## ")) {
+          unit = line.slice(3).trim();
+          topic = "";
+          continue;
+        }
+        if (line.startsWith("### ")) {
+          topic = line.slice(4).trim();
+          continue;
+        }
+        if (kind === "concept" && /^\d+\.\s+\*\*/.test(line)) {
+          const match = line.match(/^(\d+)\.\s+\*\*(.+?):\*\*\s*(.+)$/);
+          if (match) entries.push({ number: Number(match[1]), title: match[2].trim(), definition: match[3].trim(), unit, topic });
+        }
+        if (kind === "question" && /^\d+\.\s+/.test(line)) {
+          const match = line.match(/^(\d+)\.\s+(.+?)\s+R_\s+(.+)$/);
+          if (match) entries.push({ number: Number(match[1]), prompt: match[2].trim(), answer: match[3].trim(), unit, topic });
+        }
+      }
+      return entries;
+    }
+
+    function escapeHTML(value) {
+      return String(value).replace(/[&<>"']/g, char => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+      })[char]);
+    }
+
+    function groupBy(items, key) {
+      return items.reduce((groups, item) => {
+        const name = item[key] || "Otros";
+        (groups[name] ||= []).push(item);
+        return groups;
+      }, {});
+    }
+
+    function populateUnitFilters() {
+      const options = state.units.map(unit => `<option value="${escapeHTML(unit)}">${escapeHTML(unit)}</option>`).join("");
+      $("#concept-unit").insertAdjacentHTML("beforeend", options);
+      $("#question-unit").insertAdjacentHTML("beforeend", options);
+    }
+
+    function renderConcepts() {
+      const query = $("#concept-search").value.trim().toLocaleLowerCase("es");
+      const selectedUnit = $("#concept-unit").value;
+      const filtered = state.concepts.filter(item =>
+        (!selectedUnit || item.unit === selectedUnit) &&
+        (!query || `${item.title} ${item.definition} ${item.topic} ${item.unit}`.toLocaleLowerCase("es").includes(query))
+      );
+      $("#concept-count").textContent = `${filtered.length} de ${state.concepts.length} conceptos`;
+      if (!filtered.length) {
+        $("#concept-list").innerHTML = '<div class="empty-state">No encontramos conceptos con esos filtros. Prueba otra búsqueda.</div>';
+        return;
+      }
+      const units = groupBy(filtered, "unit");
+      $("#concept-list").innerHTML = Object.entries(units).map(([unit, entries]) => {
+        const topics = groupBy(entries, "topic");
+        return `<section class="unit-block"><h3 class="unit-title">${escapeHTML(unit)}</h3>${
+          Object.entries(topics).map(([topic, concepts]) =>
+            `<h4 class="topic-block">${escapeHTML(topic)}</h4><div class="study-grid">${
+              concepts.map(item => `<article class="study-card"><div class="study-card-top"><span class="number">${item.number}</span><div><h4>${escapeHTML(item.title)}</h4><p>${escapeHTML(item.definition)}</p></div></div></article>`).join("")
+            }</div>`
+          ).join("")
+        }</section>`;
+      }).join("");
+    }
+
+    function renderQuestions() {
+      const query = $("#question-search").value.trim().toLocaleLowerCase("es");
+      const selectedUnit = $("#question-unit").value;
+      const filtered = state.questions.filter(item =>
+        (!selectedUnit || item.unit === selectedUnit) &&
+        (!query || `${item.prompt} ${item.answer} ${item.topic} ${item.unit}`.toLocaleLowerCase("es").includes(query))
+      );
+      $("#question-count").textContent = `${filtered.length} de ${state.questions.length} preguntas`;
+      if (!filtered.length) {
+        $("#question-list").innerHTML = '<div class="empty-state">No encontramos preguntas con esos filtros. Prueba otra búsqueda.</div>';
+        return;
+      }
+      $("#question-list").innerHTML = filtered.map((item, index) => {
+        const id = `answer-${index}`;
+        return `<article class="question-card"><div class="question-top"><span class="number">${item.number}</span><h3>${escapeHTML(item.prompt)}</h3></div><div class="answer" id="${id}" aria-hidden="true"><strong>Respuesta:</strong> ${escapeHTML(item.answer)}</div><button type="button" class="toggle-answer" aria-expanded="false" aria-controls="${id}">Mostrar respuesta</button></article>`;
+      }).join("");
+    }
+
+    function shuffle(items) {
+      const result = [...items];
+      for (let i = result.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [result[i], result[j]] = [result[j], result[i]];
+      }
+      return result;
+    }
+
+    function buildExam() {
+      if (state.concepts.length < 30) {
+        state.exam = null;
+        return;
+      }
+      const selected = shuffle(state.concepts).slice(0, 30);
+      state.exam = selected.map((concept, index) => {
+        const related = state.concepts.filter(item =>
+          item.title !== concept.title && (item.topic === concept.topic || item.unit === concept.unit)
+        );
+        const distractors = shuffle(related).slice(0, 3);
+        if (distractors.length < 3) {
+          const extras = shuffle(state.concepts.filter(item =>
+            item.title !== concept.title && !distractors.some(option => option.title === item.title)
+          )).slice(0, 3 - distractors.length);
+          distractors.push(...extras);
+        }
+        const options = shuffle([concept, ...distractors]);
+        const promptStyles = [
+          `¿Qué concepto corresponde a esta descripción? ${concept.definition}`,
+          `Identifica el término definido así: ${concept.definition}`,
+          `Selecciona la idea que coincide con esta definición: ${concept.definition}`
+        ];
+        return {
+          number: index + 1,
+          concept,
+          prompt: promptStyles[Math.floor(Math.random() * promptStyles.length)],
+          options,
+          correctTitle: concept.title,
+          selectedTitle: null
+        };
+      });
+      state.examQuestionIndex = 0;
+      state.examSubmitted = false;
+    }
+
+    function renderExam() {
+      const target = $("#exam-content");
+      if (!state.exam) {
+        target.innerHTML = `<div class="quiz-heading"><div><h1>Examen diagnóstico</h1><p>No hay suficientes conceptos para crear un examen de 30 preguntas.</p></div></div><div class="notice">Se requieren al menos 30 conceptos distintos; encontramos ${state.concepts.length}.</div>`;
+        return;
+      }
+      if (state.examSubmitted) {
+        const score = state.exam.filter(item => item.selectedTitle === item.correctTitle).length;
+        const grade = (score / state.exam.length * 10).toFixed(1);
+        target.innerHTML = `<div class="result-card"><div class="result-icon" aria-hidden="true">✓</div><h2>¡Examen terminado!</h2><div class="result-score">${score}/${state.exam.length}</div><div class="result-grade">Calificación: <span class="grade-value">${grade}</span> / 10</div><p class="result-note">Tu resultado es una oportunidad para identificar lo que ya dominas y los temas que puedes repasar.</p><button type="button" class="button button-teal" data-action="restart">Intentar otro examen</button><button type="button" class="button button-light" data-view="concepts">Repasar conceptos</button></div>`;
+        return;
+      }
+      const item = state.exam[state.examQuestionIndex];
+      const answeredCount = state.exam.filter(question => question.selectedTitle !== null).length;
+      const progress = answeredCount / state.exam.length * 100;
+      const answered = item.selectedTitle !== null;
+      const options = item.options.map((option, index) => {
+        const isCorrect = option.title === item.correctTitle;
+        const isSelected = option.title === item.selectedTitle;
+        const className = answered && isCorrect ? " correct" : answered && isSelected ? " incorrect" : "";
+        const mark = answered && isCorrect ? '<span class="option-mark" aria-label="Respuesta correcta">✓</span>' :
+          answered && isSelected ? '<span class="option-mark" aria-label="Respuesta incorrecta">✗</span>' : "";
+        return `<button type="button" class="option${className}" data-action="answer" data-title="${escapeHTML(option.title)}" ${answered ? "disabled" : ""}><span class="option-letter">${String.fromCharCode(65 + index)}</span><span>${escapeHTML(option.title)}</span>${mark}</button>`;
+      }).join("");
+      const feedback = !answered ? "" : item.selectedTitle === item.correctTitle
+        ? '<div class="feedback good" role="status">✓ ¡Correcto! Muy bien identificado.</div>'
+        : `<div class="feedback bad" role="status">✗ No es correcto. La respuesta es: ${escapeHTML(item.correctTitle)}.</div>`;
+      target.innerHTML = `<div class="quiz-heading"><div><h1>Examen diagnóstico</h1><p>30 reactivos · una pregunta por concepto · retroalimentación inmediata</p></div><div class="quiz-meta"><span class="pill">${answeredCount}/30 respondidas</span><span class="pill">Una oportunidad por pregunta</span></div></div><div class="progress-track" role="progressbar" aria-label="Progreso del examen" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.round(progress)}"><div class="progress-value" style="width:${progress}%"></div></div><article class="quiz-card"><div class="question-kicker">Pregunta ${item.number} de ${state.exam.length} · ${escapeHTML(item.concept.unit)}</div><h2 class="quiz-prompt">${escapeHTML(item.prompt)}</h2><div class="options">${options}</div>${feedback}<div class="quiz-controls"><button type="button" class="button button-light" data-action="previous" ${state.examQuestionIndex === 0 ? "disabled" : ""}>← Anterior</button><div class="control-group"><button type="button" class="button button-light" data-action="next" ${state.examQuestionIndex === state.exam.length - 1 ? "disabled" : ""}>Siguiente →</button><button type="button" class="button button-teal" data-action="finish" ${answeredCount !== state.exam.length ? "disabled" : ""}>Finalizar examen</button></div></div></article>`;
+    }
+
+    function setView(view, startNewExam = false) {
+      if (!["home", "concepts", "questions", "exam"].includes(view)) view = "home";
+      if (view === "exam" && (startNewExam || !state.exam)) buildExam();
+      state.view = view;
+      $$(".view").forEach(section => section.classList.toggle("hidden", section.id !== `${view}-view`));
+      $$(".nav [data-view]").forEach(button => {
+        if (button.dataset.view === view) button.setAttribute("aria-current", "page");
+        else button.removeAttribute("aria-current");
+      });
+      if (view === "exam") renderExam();
+      if (view === "concepts") renderConcepts();
+      if (view === "questions") renderQuestions();
+      if (view === "home") history.replaceState(null, "", `${location.pathname}${location.search}`);
+      else history.replaceState(null, "", `${location.pathname}${location.search}#${view}`);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function handleClick(event) {
+      const viewButton = event.target.closest("[data-view]");
+      if (viewButton) {
+        setView(viewButton.dataset.view, viewButton.dataset.view === "exam");
+        return;
+      }
+      const toggle = event.target.closest(".toggle-answer");
+      if (toggle) {
+        const answer = document.getElementById(toggle.getAttribute("aria-controls"));
+        const isOpen = answer.classList.toggle("is-open");
+        answer.setAttribute("aria-hidden", String(!isOpen));
+        toggle.setAttribute("aria-expanded", String(isOpen));
+        toggle.textContent = isOpen ? "Ocultar respuesta" : "Mostrar respuesta";
+        return;
+      }
+      const action = event.target.closest("[data-action]")?.dataset.action;
+      if (!action) return;
+      if (action === "restart") {
+        buildExam();
+        renderExam();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        return;
+      }
+      if (!state.exam) return;
+      if (action === "answer" && state.exam[state.examQuestionIndex].selectedTitle === null) {
+        state.exam[state.examQuestionIndex].selectedTitle = event.target.closest("[data-title]").dataset.title;
+      } else if (action === "previous") {
+        state.examQuestionIndex = Math.max(0, state.examQuestionIndex - 1);
+      } else if (action === "next") {
+        state.examQuestionIndex = Math.min(state.exam.length - 1, state.examQuestionIndex + 1);
+      } else if (action === "finish" && state.exam.every(item => item.selectedTitle !== null)) {
+        state.examSubmitted = true;
+      }
+      renderExam();
+    }
+
+    function init() {
+      state.concepts = parseMaterials(conceptSource, "concept");
+      state.questions = parseMaterials(questionSource, "question");
+      state.units = [...new Set(state.concepts.map(item => item.unit))];
+      populateUnitFilters();
+      $("#home-summary").textContent = `${state.concepts.length} conceptos y ${state.questions.length} preguntas, organizados a partir de tus materiales de estudio.`;
+      document.addEventListener("click", handleClick);
+      $("#concept-search").addEventListener("input", renderConcepts);
+      $("#concept-unit").addEventListener("change", renderConcepts);
+      $("#question-search").addEventListener("input", renderQuestions);
+      $("#question-unit").addEventListener("change", renderQuestions);
+      const initialView = location.hash.slice(1);
+      setView(initialView === "exam" ? "exam" : ["home", "concepts", "questions"].includes(initialView) ? initialView : "home");
+    }
+    init();
+  </script>
+</body>
+</html>
